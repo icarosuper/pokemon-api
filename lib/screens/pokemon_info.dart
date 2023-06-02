@@ -10,7 +10,9 @@ class PokemonInfoScreen extends StatelessWidget {
 
   Text getTitle() {
     if (pokemon != null) {
-      return Text(pokemon!.name.toUpperCase());
+      final pokemonName = pokemon!.name;
+      return Text(pokemonName.replaceFirst(
+          pokemonName[0], pokemonName[0].toUpperCase()));
     } else {
       return const Text("Pokémon não encontrado...");
     }
