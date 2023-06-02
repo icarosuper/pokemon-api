@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:litedex/components/details_box.dart';
+import 'package:litedex/helpers/pokemon_type_colors.dart';
 import 'package:litedex/model/pokemon.dart';
 
 class PokemonDetails extends StatelessWidget {
@@ -11,8 +12,11 @@ class PokemonDetails extends StatelessWidget {
     return text.replaceFirst(text[0], text[0].toUpperCase());
   }
 
-  styledText(BuildContext context, String text, {double size = 20}) {
-    return Text(text, style: TextStyle(fontSize: size));
+  styledText(BuildContext context, String text,
+      {double size = 20, Color? color}) {
+    return Text(text,
+        style: TextStyle(
+            fontSize: size, color: color ?? Colors.black.withOpacity(.83)));
   }
 
   detailsLine(BuildContext context, String name, String value) {
@@ -40,8 +44,15 @@ class PokemonDetails extends StatelessWidget {
         styledText(context, 'Tipos:'),
         Column(
             crossAxisAlignment: CrossAxisAlignment.end,
-            children: List<Widget>.from(pokemon.types.map((type) =>
-                styledText(context, firstLetterToUpper(type), size: 18))))
+            children: List<Widget>.from(pokemon.types.map((type) => Container(
+                  decoration: BoxDecoration(
+                      color: pokemonTypeColors[type],
+                      borderRadius: const BorderRadius.all(Radius.circular(5))),
+                  padding: const EdgeInsets.all(3),
+                  margin: const EdgeInsets.only(bottom: 3),
+                  child: styledText(context, firstLetterToUpper(type),
+                      color: Colors.white10.withOpacity(.9)),
+                ))))
       ],
     );
   }
