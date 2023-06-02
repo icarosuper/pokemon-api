@@ -25,14 +25,20 @@ class LoggingInterceptor implements InterceptorContract {
   }
 }
 
-Future<Pokemon?> fetch(String item) async {
-  Client client = InterceptedClient.build(
-    interceptors: [LoggingInterceptor()],
-    requestTimeout: const Duration(seconds: 5),
-  );
+Future<Pokemon?> getPokemonByName(String pokemonName) async {
+  try {
+    Client client = InterceptedClient.build(
+      interceptors: [LoggingInterceptor()],
+      requestTimeout: const Duration(seconds: 5),
+    );
 
-  final Response response =
-      await client.get(Uri.parse("https://pokeapi.co/api/v2/pokemon/$item/"));
-  if (response.statusCode != 200) return null;
-  return Pokemon.fromJson(jsonDecode(response.body));
+    final Response response = await client
+        .get(Uri.parse("https://pokeapi.co/api/v2/pokemon/$pokemonName/"));
+
+    if (response.statusCode != 200) return null;
+
+    return Pokemon.fromJson(jsonDecode(response.body));
+  } catch (error) {
+    return null;
+  }
 }

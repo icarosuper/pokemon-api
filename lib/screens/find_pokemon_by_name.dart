@@ -11,8 +11,21 @@ class FindPokemonByName extends StatefulWidget {
 
 class _FindPokemonByNameState extends State<FindPokemonByName>
     with SingleTickerProviderStateMixin {
-  final TextEditingController _formFieldController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   late AnimationController _controller;
+
+  searchPokemon() {
+    final pokemonName = _nameController.text.toLowerCase().trim();
+    _nameController.text = '';
+
+    getPokemonByName(pokemonName).then(
+      (pokemon) => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => PokemonInfoScreen(pokemon: pokemon),
+        ),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -33,7 +46,7 @@ class _FindPokemonByNameState extends State<FindPokemonByName>
       child: Column(
         children: [
           TextFormField(
-            controller: _formFieldController,
+            controller: _nameController,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               hintText: "Insira o nome de um Pokémon ou um número.",
@@ -42,17 +55,7 @@ class _FindPokemonByNameState extends State<FindPokemonByName>
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: ElevatedButton(
-              onPressed: () {
-                final uri = _formFieldController.text.toLowerCase().trim();
-                _formFieldController.text = '';
-                fetch(uri).then(
-                  (pokemon) => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => PokemonInfoScreen(pokemon: pokemon),
-                    ),
-                  ),
-                );
-              },
+              onPressed: searchPokemon,
               child: const Text("Buscar"),
             ),
           ),
